@@ -34,8 +34,7 @@ def send_request(url,proxy):
             print(Fore.RED+"Status Code: ",status)
     except IOError:
         print(Fore.RED+"Connection error - Bad Proxy."+"\n")
-    except Exception as e:
-        print(e)
+    except Exception:
         pass
 
 
