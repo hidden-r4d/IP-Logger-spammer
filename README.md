@@ -1,2 +1,2 @@
-# IP-Logger-spammer
-Quick little thing i made to spam ip loggers
+# IP-Logger-spammer CLI
+Deadbread's IP logger spammer but without PySimpleGUI
