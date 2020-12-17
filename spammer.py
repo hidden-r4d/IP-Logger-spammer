@@ -1,45 +1,47 @@
 import random
 import requests
-import PySimpleGUI as sg
 from proxyscrape import create_collector
 from concurrent.futures import ThreadPoolExecutor
-from fake_useragent import UserAgent
+from colorama import Fore
 
-
-ua = UserAgent()
 collector = create_collector('my-collector', 'https')
 executor = ThreadPoolExecutor(max_workers=1000)
 
+# Replace these with whatever you want (Maybe a little message for someone who thinks they're grabbing your IP ;)
+agents = ["replace me", "example value", "test"]
+referers = ["replace me", "example value", "test"]
 
-def asciigen(length):
-    asc = ''
-    for x in range(int(length)):
-        num = random.randrange(13000)
-        asc = asc + chr(num)
-    return asc
+print(Fore.GREEN+"IP LOGGER SPAMMER")
+url = input(Fore.BLUE+"IP grabber: ")
 
-
-def send_request(site,proxy):
-    headers = {'user-agent': ua.random}
+def send_request(url,proxy):
+    headers = {
+            "user-agent": random.choice(agents),
+            "referer": random.choice(referers)
+        }
     try:
-        e = requests.get(site, proxies={"http":proxy,"https":proxy}, headers=headers, timeout=15)
-        print(e.status_code)
-    except Exception:
+        req = requests.get(url, proxies={"http":proxy,"https":proxy}, headers=headers, timeout=15)
+        status = req.status_code
+        if status == 200:
+            print(Fore.GREEN+"200: Successful."+"\n")
+        elif status == 429:
+            print(Fore.RED+"429: Too many requests."+"\n")
+        elif status == 404:
+            print(Fore.RED+"404: Not Found."+"\n")
+        elif status == 403:
+            print(Fore.RED+"403: Permission Denied."+"\n")
+        else:
+            print(Fore.RED+"Status Code: ",status)
+    except IOError:
+        print(Fore.RED+"Connection error - Bad Proxy."+"\n")
+    except Exception as e:
+        print(e)
         pass
 
-layout = [
-        [sg.Text("IP Grabber Link Spammer")],
-        [sg.Input(key="link"), sg.Combo([5,10,20,50,100,300,500,1000], size=(5,1), key='a', default_value=100), sg.Button("Spam",size=(5,1))]
-        ]
-window = sg.Window("IP Grabber Spammer by DeadBread").Layout(layout)
+
 while True:
-    event, values = window.Read()
-    if event is None:
-        pass
-    else:
-        for x in range(int(values['a'])):
-            proxy = collector.get_proxy()
-            port = proxy[1]
-            proxy = proxy[0]
-            proxy = proxy + ":" + port
-            executor.submit(send_request, values['link'], proxy)
+    proxy = collector.get_proxy()
+    port = proxy[1]
+    proxy = proxy[0]
+    proxy = proxy + ":" + port
+    executor.submit(send_request, url, proxy)
