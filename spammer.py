@@ -8,16 +8,16 @@ collector = create_collector('my-collector', 'https')
 executor = ThreadPoolExecutor(max_workers=1000)
 
 # Replace these with whatever you want (Maybe a little message for someone who thinks they're grabbing your IP ;)
-agents = ["replace me", "example value", "test"]
-referers = ["replace me", "example value", "test"]
+# agents = ["replace me", "example value", "test"]
+# referers = ["replace me", "example value", "test"]
 
 print(Fore.GREEN+"IP LOGGER SPAMMER")
 url = input(Fore.BLUE+"IP grabber: ")
 
 def send_request(url,proxy):
     headers = {
-            "user-agent": random.choice(agents),
-            "referer": random.choice(referers)
+    #        "user-agent": random.choice(agents),
+    #        "referer": random.choice(referers)
         }
     try:
         req = requests.get(url, proxies={"http":proxy,"https":proxy}, headers=headers, timeout=15)
